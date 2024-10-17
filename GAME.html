@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simon Game</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: white; /* Initial background color */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h2 {
+            margin-top: 20px;
+        }
+        .btn-container {
+            display: flex; /* Flex layout */
+            justify-content: center;
+            flex-wrap: wrap; /* Wrap buttons on smaller screens */
+            width: 440px; /* Adjusted width to fit four buttons */
+            margin: 40px auto; /* Center the container */
+        }
+        .btn {
+            height: 200px;
+            width: 200px;
+            border-radius: 20%;
+            border: 10px solid black;
+            margin: 10px; /* Adjusted margin */
+            cursor: pointer;
+            transition: filter 0.2s, transform 0.2s; /* Smooth transition */
+        }
+        .red {
+            background-color: #d95980;
+        }
+        .yellow {
+            background-color: #f99b45;
+        }
+        .purple {
+            background-color: #819ff9;
+        }
+        .green {
+            background-color: #63aac0;
+        }
+        /* Flash effect using brightness filter */
+        .flash {
+            filter: brightness(150%);
+            transform: scale(1.1); /* Slightly enlarge for visual effect */
+        }
+        /* Optional: Different flash effect for user clicks */
+        .userflash {
+            filter: brightness(200%);
+            transform: scale(1.2);
+        }
+        /* Responsive Design */
+        @media (max-width: 500px) {
+            .btn-container {
+                width: 90%;
+            }
+            .btn {
+                height: 100px;
+                width: 100px;
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Simon Game</h1>
+    <h2>Press Any Key to Start</h2>
+    <div class="btn-container">
+        <div class="btn red" id="red"></div>
+        <div class="btn yellow" id="yellow"></div>
+        <div class="btn purple" id="purple"></div>
+        <div class="btn green" id="green"></div>
+    </div>
+
+    <script>
+        let gameSeq = [];
+        let userSeq = [];
+
+        const btns = ["red", "yellow", "purple", "green"];
+
+        let started = false;
+        let level = 0;
+
+        const h2 = document.querySelector("h2");
+
+        // Listen for keypress to start the game
+        document.addEventListener("keypress", function () {
+            if (!started) {
+                console.log("Game started");
+                started = true;
+                levelUp();
+            }
+        });
+
+        // Function to flash the button (for game sequence)
+        function btnFlash(btn) {
+            btn.classList.add("flash"); // Corrected 'classLIst' to 'classList'
+            setTimeout(function () {
+                btn.classList.remove("flash"); // Corrected 'classLIst' to 'classList'
+            }, 250);
+        }
+
+        // Function to flash the button (for user clicks)
+        function userFlash(btn) {
+            btn.classList.add("userflash"); // Corrected 'classLIst' to 'classList'
+            setTimeout(function () {
+                btn.classList.remove("userflash"); // Corrected 'classLIst' to 'classList'
+            }, 250);
+        }
+
+        // Function to advance to the next level
+        function levelUp() {
+            userSeq = [];
+            level++;
+            h2.innerHTML = `Level ${level}`;
+
+            // Choose a random button
+            const randIdx = Math.floor(Math.random() * btns.length); // Changed 4 to btns.length for scalability
+            const randColor = btns[randIdx];
+            const randBtn = document.querySelector(`.${randColor}`);
+            gameSeq.push(randColor);
+            console.log("Game Sequence:", gameSeq);
+            btnFlash(randBtn); // Changed 'gameFlash' to 'btnFlash'
+        }
+
+        // Function to check user's answer
+        function checkAns(idx) {
+            if (userSeq[idx] === gameSeq[idx]) {
+                if (userSeq.length === gameSeq.length) {
+                    setTimeout(levelUp, 1000);
+                }
+            } else {
+                h2.innerHTML = `Game Over! Your score was <b>${level}</b> <br> Press Any Key to Restart.`;
+                document.body.style.backgroundColor = "red"; // Corrected 'backgroundcolor' to 'backgroundColor'
+                setTimeout(function () {
+                    document.body.style.backgroundColor = "white"; // Corrected 'backgroundcolor' to 'backgroundColor'
+                }, 150);
+                reset();
+            }
+        }
+
+        // Function to handle button presses
+        function btnPress() {
+            const btn = this;
+            userFlash(btn);
+
+            const userColor = btn.getAttribute("id"); // Changed 'userColor' to use 'id' since IDs are set
+            userSeq.push(userColor);
+            checkAns(userSeq.length - 1);
+        }
+
+        // Add event listeners to all buttons
+        const allBtns = document.querySelectorAll(".btn");
+        for (let btn of allBtns) { // Added 'let' to declare 'btn'
+            btn.addEventListener("click", btnPress);
+        }
+
+        // Function to reset the game
+        function reset() {
+            started = false;
+            gameSeq = [];
+            userSeq = [];
+            level = 0;
+        }
+    </script>
+</body>
+</html>
