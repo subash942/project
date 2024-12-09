@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bill</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bill-container">
+    <h2>Welcome to this shop</h2>
+    <p class="date">Date: 05-12-2024</p>
+    <p class="place">Place: Pooranapul</p>
+    
+    <form id="product-form">
+      <input type="text" id="product-id" placeholder="Product ID" required>
+      <input type="text" id="product-name" placeholder="Product Name" required>
+      <input type="number" id="product-price" placeholder="Product Price" required>
+      <button type="submit">Add Product</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Product ID</th>
+          <th>Product Name</th>
+          <th>Product Price</th>
+        </tr>
+      </thead>
+      <tbody id="product-table-body">
+      </tbody>
+    </table>
+    <p class="total">Total amount: Rs 0-/</p>
+  </div>
+  <script src="aoo.js"></script>
+</body>
+</html>
